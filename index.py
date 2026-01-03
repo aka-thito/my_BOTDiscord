@@ -1,20 +1,38 @@
 # Importacion de librerias para el INDEX del bot 
-import os
 import discord
+import asyncio
+from discord.ext import commands
 
 # Importacion de Variables y Funciones dentro de los modulos
-from dotenv import load_dotenv
-from config.settings import TOKEN
+from config.settings import TOKEN, PREFIX
 from config.intents import get_intents
+from config.loader import load_commands
 
-# asigno una constante a la funcion para poder ejecutarla
+# Asigno una constante a la funcion para poder ejecutarla
 INTENTS = get_intents()
 
-client = discord.Client(intents = INTENTS)
+ready = commands.Bot(
+    command_prefix = PREFIX, # Asignacion de Prefix
+    intents = INTENTS # Asignacion de permisos
+    )
 
-@client.event
+# Evento Ready
+@ready.event
 async def on_ready():
-    print(f'{client.user} Esta Funcionando')
+    print(f'{ready.user} Esta Funcionando')
+
+# Arraque del BOT
+async def main():
+    async with ready:
+        # Cargar comandos automátiamente
+        await load_commands(ready)
+
+        # Inicia Sesión del bot
+        await ready.start(TOKEN)
 
 
-client.run(TOKEN)
+#Ejecuta el bot y una excepcion para cuando se apaga
+try:
+    asyncio.run(main())
+except KeyboardInterrupt:
+    print("El Bot fue apagado manualemnte") 

@@ -1,4 +1,4 @@
-# Importanto el sistema operativo
+# Importanto dependencias o librerias
 import os
 from dotenv import load_dotenv 
 
