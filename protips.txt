@@ -1,0 +1,3 @@
+PRO TIPS CON VISUAL STUDIO CODE
+
+Ctrl + K y Ctrl + C para comentar un bloque de codigo seleccionado previamente
