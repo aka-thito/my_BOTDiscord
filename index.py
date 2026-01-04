@@ -1,34 +1,32 @@
 # Importacion de librerias para el INDEX del bot 
-import discord
 import asyncio
 from discord.ext import commands
 
 # Importacion de Variables y Funciones dentro de los modulos
 from config.settings import TOKEN, PREFIX
 from config.intents import get_intents
-from config.loader import load_commands
+from config.loader import load_commands, load_events
 
 # Asigno una constante a la funcion para poder ejecutarla
 INTENTS = get_intents()
 
-ready = commands.Bot(
+bot = commands.Bot(
     command_prefix = PREFIX, # Asignacion de Prefix
     intents = INTENTS # Asignacion de permisos
     )
 
-# Evento Ready
-@ready.event
-async def on_ready():
-    print(f'{ready.user} Esta Funcionando')
 
 # Arraque del BOT
 async def main():
-    async with ready:
-        # Cargar comandos automátiamente
-        await load_commands(ready)
+    async with bot:
+        # Cargar comandos por medio de la funcion load_commands
+        await load_commands(bot)
+
+        # Cargar eventos
+        await load_events(bot)
 
         # Inicia Sesión del bot
-        await ready.start(TOKEN)
+        await bot.start(TOKEN)
 
 
 #Ejecuta el bot y una excepcion para cuando se apaga

@@ -5,19 +5,19 @@ class Invite(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="invite")
+    @commands.command(name = "invite")
     async def invite(self, ctx):
         # ID del bot
         client_id = self.bot.user.id
 
-        # Permisos básicos (puedes cambiarlos)
-        permissions = discord.Permissions(administrator=False)
+        # Permisos básicos
+        permissions = discord.Permissions(administrator = False)
         invite_link = discord.utils.oauth_url(
             client_id,
-            permissions=permissions
+            permissions = permissions
         )
 
-        # Enviar DM
+        # Intenta enviar DM
         try:
             await ctx.author.send(
                 f"🤖 Aquí tienes el enlace para invitarme a otro servidor:\n{invite_link}"

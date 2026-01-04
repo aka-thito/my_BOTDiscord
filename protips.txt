@@ -1,3 +1,4 @@
 PRO TIPS CON VISUAL STUDIO CODE
 
 Ctrl + K y Ctrl + C para comentar un bloque de codigo seleccionado previamente
+Ctrl + Shift + L para editar de forma simultanea coincidencias en el codigo
