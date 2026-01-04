@@ -5,7 +5,12 @@ class Invite(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name = "invite")
+    # Command para obtener el enlace de invitacion del bot
+    @commands.command(
+            name = "invite",
+            help = "Obtén el enlace para invitar al bot a tu servidor"
+            )
+    
     async def invite(self, ctx):
         # ID del bot
         client_id = self.bot.user.id
@@ -20,9 +25,9 @@ class Invite(commands.Cog):
         # Intenta enviar DM
         try:
             await ctx.author.send(
-                f"🤖 Aquí tienes el enlace para invitarme a otro servidor:\n{invite_link}"
+                f"Aquí tienes el enlace para invitarme a otro servidor:\n{invite_link}"
             )
-            await ctx.send("📩 Te envié el enlace por mensaje privado.")
+            await ctx.send("Te envié el enlace por mensaje privado.")
         except discord.Forbidden:
             await ctx.send(
                 "❌ No pude enviarte el mensaje privado. ¿Tienes los DMs cerrados?"

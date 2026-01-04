@@ -18,6 +18,7 @@ bot = commands.Bot(
 
 # Arraque del BOT
 async def main():
+
     async with bot:
         # Cargar comandos por medio de la funcion load_commands
         await load_commands(bot)
@@ -32,5 +33,6 @@ async def main():
 #Ejecuta el bot y una excepcion para cuando se apaga
 try:
     asyncio.run(main())
+    # Si se presiona Ctrl+C para apagar el bot
 except KeyboardInterrupt:
     print("El Bot fue apagado manualemnte") 
