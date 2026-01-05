@@ -3,6 +3,7 @@ from discord.ext import commands
 
 # Define el evento on_ready para el bot
 class Ready(commands.Cog):
+    
     # Constructor de la clase
     def __init__(self, bot):
         # Asigno el bot a una variable de la clase

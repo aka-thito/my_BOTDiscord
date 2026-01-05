@@ -11,8 +11,10 @@ from config.loader import load_commands, load_events
 INTENTS = get_intents()
 
 bot = commands.Bot(
+
     command_prefix = PREFIX, # Asignacion de Prefix
     intents = INTENTS # Asignacion de permisos
+    
     )
 
 
@@ -33,6 +35,7 @@ async def main():
 #Ejecuta el bot y una excepcion para cuando se apaga
 try:
     asyncio.run(main())
-    # Si se presiona Ctrl+C para apagar el bot
+    
+# Si se presiona Ctrl+C para apagar el bot
 except KeyboardInterrupt:
     print("El Bot fue apagado manualemnte") 
