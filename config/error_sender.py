@@ -1,6 +1,7 @@
 from config.embeds import error_embed
 from config.errors import ErrorType
 
+# Descripcion: Envia mensajes de error estandarizados
 async def send_error(ctx, error_type: ErrorType):
 
     if error_type == ErrorType.USAGE:
@@ -40,4 +41,5 @@ async def send_error(ctx, error_type: ErrorType):
             "Ocurrió un error inesperado."
         )
 
-    await ctx.send(embed=embed)
+    # Enviar el mensaje de error al contexto
+    await ctx.send(embed = embed)

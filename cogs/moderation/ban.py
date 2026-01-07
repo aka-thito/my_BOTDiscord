@@ -9,33 +9,45 @@ class Moderation_Ban(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    # Descripcion: Comando para banear a un miembro del servidor
     @commands.command(
+            
     name = "ban",
     help = "Banea a un miembro del servidor"
-)
+
+    )
+
     @commands.has_permissions(ban_members = True)
+    
+    # Definicion de la funcion ban
     async def ban(self, ctx, member: discord.Member, *, reason = None):
 
+        # Si el usuario se me menciona a si mismo
         if member == ctx.author:
             await send_error(ctx, ErrorType.SELF_ACTION)
             return
     
+        # Asignacion de razon por defecto si no se proporciona
         reason = reason or "No se proporcionó una razón."
 
+        # Intento de banear al miembro
         try:
+
             await member.ban(reason=reason)
             await ctx.send(
-                embed=success_embed(
+                embed = success_embed(
                     "Miembro baneado",
                     f"**{member.name}** fue baneado.\n"
                     f"**Razón:** {reason}"
                 )
+
         )
 
+        # Excepcion para el error de permisos del bot
         except discord.Forbidden:
             await send_error(ctx, ErrorType.BOT_PERMISSIONS)
 
-
+        # Excepcion para otros errores desconocidos
         except discord.HTTPException:
             await send_error(ctx, ErrorType.UNKNOWN)
         

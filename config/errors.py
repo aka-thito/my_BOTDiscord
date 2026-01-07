@@ -1,5 +1,6 @@
 from enum import Enum
 
+# Descripcion: Tipos de errores estandarizados
 class ErrorType(Enum):
     
     USAGE = 1

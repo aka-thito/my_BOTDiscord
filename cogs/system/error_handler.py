@@ -3,12 +3,15 @@ from discord.ext import commands
 from config.error_sender import send_error
 from config.errors import ErrorType
 
+# Descripcion: Manejador de errores global para comandos
 class ErrorHandler(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
 
     @commands.Cog.listener()
+
+    # definicion de la funcion on_command_error
     async def on_command_error(self, ctx, error):
 
         # Ignorar errores manejados manualmente
@@ -37,4 +40,5 @@ class ErrorHandler(commands.Cog):
             raise error  # 👈 útil en desarrollo
 
 async def setup(bot):
+    # Agrega el Cog ErrorHandler al bot
     await bot.add_cog(ErrorHandler(bot))
