@@ -1,11 +1,12 @@
-from enum import Enum
+from enum import Enum, auto
 
 # Descripcion: Tipos de errores estandarizados
 class ErrorType(Enum):
     
-    USAGE = 1
-    PERMISSIONS = 2
-    BOT_PERMISSIONS = 3
-    INVALID_MEMBER = 4
-    SELF_ACTION = 5
-    UNKNOWN = 99
+    USAGE = auto()
+    PERMISSIONS = auto()
+    BOT_PERMISSIONS = auto()
+    INVALID_MEMBER = auto()
+    SELF_ACTION = auto()
+    HIERARCHY = auto()
+    UNKNOWN = auto()

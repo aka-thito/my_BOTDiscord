@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from config.embeds import success_embed, error_embed
+from config.embeds import success_embed
 from config.error_sender import send_error
 from config.errors import ErrorType
 
@@ -17,14 +17,30 @@ class Moderation_Ban(commands.Cog):
 
     )
 
+    # Requiere permisos de banear miembros
     @commands.has_permissions(ban_members = True)
-    
+
     # Definicion de la funcion ban
     async def ban(self, ctx, member: discord.Member, *, reason = None):
+
+        # Si el usuario no proporciona un miembro
+        if member is None:
+            await send_error(ctx, ErrorType.USAGE)
+            return
 
         # Si el usuario se me menciona a si mismo
         if member == ctx.author:
             await send_error(ctx, ErrorType.SELF_ACTION)
+            return
+        
+        # Si el usuario intenta banear al bot
+        if member == ctx.guild.me:
+            await send_error(ctx, ErrorType.INVALID_TARGET  )
+            return
+        
+        # Si el miembro tiene un rol superior o igual al del autor
+        if member.top_role >= ctx.author.top_role:
+            await send_error(ctx, ErrorType.HIERARCHY)
             return
     
         # Asignacion de razon por defecto si no se proporciona
