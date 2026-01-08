@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from config.embeds import success_embed
-from config.error_sender import send_error
+from config.error_sender import send
 from config.errors import ErrorType
 
 
@@ -25,22 +25,22 @@ class Moderation_Ban(commands.Cog):
 
         # Si el usuario no proporciona un miembro
         if member is None:
-            await send_error(ctx, ErrorType.USAGE)
+            await send(ctx, ErrorType.USAGE)
             return
 
         # Si el usuario se me menciona a si mismo
         if member == ctx.author:
-            await send_error(ctx, ErrorType.SELF_ACTION)
+            await send(ctx, ErrorType.SELF_ACTION)
             return
         
         # Si el usuario intenta banear al bot
         if member == ctx.guild.me:
-            await send_error(ctx, ErrorType.INVALID_TARGET  )
+            await send(ctx, ErrorType.INVALID_TARGET  )
             return
         
         # Si el miembro tiene un rol superior o igual al del autor
         if member.top_role >= ctx.author.top_role:
-            await send_error(ctx, ErrorType.HIERARCHY)
+            await send(ctx, ErrorType.HIERARCHY)
             return
     
         # Asignacion de razon por defecto si no se proporciona
@@ -61,11 +61,11 @@ class Moderation_Ban(commands.Cog):
 
         # Excepcion para el error de permisos del bot
         except discord.Forbidden:
-            await send_error(ctx, ErrorType.BOT_PERMISSIONS)
+            await send(ctx, ErrorType.BOT_PERMISSIONS)
 
         # Excepcion para otros errores desconocidos
         except discord.HTTPException:
-            await send_error(ctx, ErrorType.UNKNOWN)
+            await send(ctx, ErrorType.UNKNOWN)
         
 
 async def setup(bot):
