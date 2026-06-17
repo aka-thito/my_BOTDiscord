@@ -42,7 +42,7 @@ async def load_events(bot):
         print(f"{loaded_events} eventos cargados correctamente")
 
 
-async def load_commands(bot, base_path = "cogs"):
+async def load_commands(bot, base_path = "commands"):
 
     # variables de contadores de comandos
     loaded_commands = 0
