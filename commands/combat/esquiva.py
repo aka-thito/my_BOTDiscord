@@ -50,7 +50,21 @@ class Esquiva(commands.Cog):
             )
             return
 
-        resultado, combat_actualizado = resolve_response(combat_id, user_id, "esquiva", accion)
+        try:
+            resultado, combat_actualizado = resolve_response(combat_id, user_id, "esquiva", accion)
+        except KeyError:
+            await interaction.followup.send(
+                embed=error_embed("Error", "No se encontraron las estadísticas de uno de los combatientes."),
+                ephemeral=True
+            )
+            return
+        except Exception as e:
+            print(f"[ESQUIVA] Error al resolver: {e}")
+            await interaction.followup.send(
+                embed=error_embed("Error inesperado", "Ocurrió un error al procesar la esquiva."),
+                ephemeral=True
+            )
+            return
 
         log_channel = self.bot.get_channel(COMBAT_LOG_CHANNEL_ID)
         if log_channel:

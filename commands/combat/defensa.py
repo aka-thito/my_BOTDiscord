@@ -50,7 +50,21 @@ class Defensa(commands.Cog):
             )
             return
 
-        resultado, combat_actualizado = resolve_response(combat_id, user_id, "defensa", accion)
+        try:
+            resultado, combat_actualizado = resolve_response(combat_id, user_id, "defensa", accion)
+        except KeyError:
+            await interaction.followup.send(
+                embed=error_embed("Error", "No se encontraron las estadísticas de uno de los combatientes."),
+                ephemeral=True
+            )
+            return
+        except Exception as e:
+            print(f"[DEFENSA] Error al resolver: {e}")
+            await interaction.followup.send(
+                embed=error_embed("Error inesperado", "Ocurrió un error al procesar la defensa."),
+                ephemeral=True
+            )
+            return
 
         log_channel = self.bot.get_channel(COMBAT_LOG_CHANNEL_ID)
         if log_channel:
