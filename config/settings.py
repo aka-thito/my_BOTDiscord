@@ -10,3 +10,5 @@ TOKEN = os.getenv("TOKEN")
 PREFIX = "!"
 
 TEST_GUILD_ID = int(os.getenv("TEST_GUILD_ID")) if os.getenv("TEST_GUILD_ID") else None
+
+COMBAT_LOG_CHANNEL_ID = 1518103186651480224
