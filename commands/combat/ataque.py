@@ -45,7 +45,7 @@ class Ataque(commands.Cog):
         accion: str,
         objetivo: discord.Member = None
     ):
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.defer()
 
         user_id = str(interaction.user.id)
         combat_id, combat = get_active_combat(user_id)
@@ -98,17 +98,27 @@ class Ataque(commands.Cog):
                 )
                 return
 
-            combat_id, combat = create_combat(
-                str(interaction.guild_id), user_id, defensor_id, accion
-            )
+            try:
+                combat_id, combat = create_combat(
+                    str(interaction.guild_id), user_id, defensor_id, accion
+                )
+            except Exception as e:
+                print(f"[ATAQUE] Error al crear combate: {e}")
+                await interaction.followup.send(
+                    embed=error_embed("Error inesperado", "No se pudo iniciar el combate."),
+                    ephemeral=True
+                )
+                return
 
-            log_channel = self.bot.get_channel(COMBAT_LOG_CHANNEL_ID)
-            if log_channel:
-                await log_channel.send(embed=_build_inicio_embed(combat_id, user_id, defensor_id, accion))
+            try:
+                log_channel = self.bot.get_channel(COMBAT_LOG_CHANNEL_ID)
+                if log_channel:
+                    await log_channel.send(embed=_build_inicio_embed(combat_id, user_id, defensor_id, accion))
+            except Exception as e:
+                print(f"[ATAQUE] Error al enviar log: {e}")
 
             await interaction.followup.send(
-                embed=info_embed("Combate iniciado", f"Registro: `{combat_id}`\nEsperando respuesta de {objetivo.mention}."),
-                ephemeral=True
+                embed=info_embed("Combate iniciado", f"Registro: `{combat_id}`\nEsperando respuesta de {objetivo.mention}.")
             )
             return
 
@@ -131,15 +141,25 @@ class Ataque(commands.Cog):
             combat["defensor_id"] if user_id == combat["atacante_id"] else combat["atacante_id"]
         )
 
-        combat = register_attack(combat_id, user_id, accion)
+        try:
+            combat = register_attack(combat_id, user_id, accion)
+        except Exception as e:
+            print(f"[ATAQUE] Error al registrar ataque: {e}")
+            await interaction.followup.send(
+                embed=error_embed("Error inesperado", "No se pudo registrar el ataque."),
+                ephemeral=True
+            )
+            return
 
-        log_channel = self.bot.get_channel(COMBAT_LOG_CHANNEL_ID)
-        if log_channel:
-            await log_channel.send(embed=_build_ataque_embed(combat_id, user_id, oponente_id, accion))
+        try:
+            log_channel = self.bot.get_channel(COMBAT_LOG_CHANNEL_ID)
+            if log_channel:
+                await log_channel.send(embed=_build_ataque_embed(combat_id, user_id, oponente_id, accion))
+        except Exception as e:
+            print(f"[ATAQUE] Error al enviar log: {e}")
 
         await interaction.followup.send(
-            embed=info_embed("Ataque registrado", f"Esperando respuesta de <@{oponente_id}>."),
-            ephemeral=True
+            embed=info_embed("Ataque registrado", f"Esperando respuesta de <@{oponente_id}>.")
         )
 
 

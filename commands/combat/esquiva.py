@@ -24,7 +24,7 @@ class Esquiva(commands.Cog):
     @app_commands.command(name="esquiva", description="Esquiva el ataque de tu oponente")
     @app_commands.describe(accion="Describe cómo esquivas")
     async def esquiva(self, interaction: discord.Interaction, accion: str):
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.defer()
 
         user_id = str(interaction.user.id)
         combat_id, combat = get_active_combat(user_id)
@@ -66,17 +66,19 @@ class Esquiva(commands.Cog):
             )
             return
 
-        log_channel = self.bot.get_channel(COMBAT_LOG_CHANNEL_ID)
-        if log_channel:
-            await log_channel.send(
-                embed=_build_resolucion_embed(
-                    combat_id, accion, user_id, resultado, combat_actualizado["turno_actual"]
+        try:
+            log_channel = self.bot.get_channel(COMBAT_LOG_CHANNEL_ID)
+            if log_channel:
+                await log_channel.send(
+                    embed=_build_resolucion_embed(
+                        combat_id, accion, user_id, resultado, combat_actualizado["turno_actual"]
+                    )
                 )
-            )
+        except Exception as e:
+            print(f"[ESQUIVA] Error al enviar log: {e}")
 
         await interaction.followup.send(
-            embed=info_embed("Esquiva registrada", resultado),
-            ephemeral=True
+            embed=info_embed("Esquiva registrada", resultado)
         )
 
 

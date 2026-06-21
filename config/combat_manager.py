@@ -8,6 +8,7 @@ CHARACTERS_FILE = "data/characters.json"
 
 
 def load_combats() -> dict:
+    os.makedirs("data", exist_ok=True)
     if not os.path.exists(COMBATS_FILE):
         with open(COMBATS_FILE, "w", encoding="utf-8") as f:
             json.dump({}, f)
@@ -55,17 +56,20 @@ def create_combat(guild_id: str, atacante_id: str, defensor_id: str, accion_text
     """Crea un nuevo combate. Retorna (combat_id, combat)."""
     combats = load_combats()
     combat_id = _generate_combat_id()
+    entrada = {
+        "tipo": "ataque",
+        "texto": accion_texto,
+        "usuario_id": atacante_id,
+        "timestamp": datetime.now().isoformat()
+    }
     combats[combat_id] = {
         "guild_id": guild_id,
         "atacante_id": atacante_id,
         "defensor_id": defensor_id,
         "turno_actual": defensor_id,
         "fase": "respuesta",
-        "ultima_accion": {
-            "tipo": "ataque",
-            "texto": accion_texto,
-            "usuario_id": atacante_id
-        },
+        "ultima_accion": entrada,
+        "historial": [entrada],
         "estado": "activo",
         "fecha_inicio": datetime.now().isoformat()
     }
@@ -79,11 +83,14 @@ def register_attack(combat_id: str, atacante_id: str, accion_texto: str) -> dict
     combat = combats[combat_id]
     oponente_id = _get_opponent(combat, atacante_id)
 
-    combat["ultima_accion"] = {
+    entrada = {
         "tipo": "ataque",
         "texto": accion_texto,
-        "usuario_id": atacante_id
+        "usuario_id": atacante_id,
+        "timestamp": datetime.now().isoformat()
     }
+    combat["ultima_accion"] = entrada
+    combat["historial"].append(entrada)
     combat["fase"] = "respuesta"
     combat["turno_actual"] = oponente_id
     save_combats(combats)
@@ -160,11 +167,15 @@ def resolve_response(combat_id: str, respondedor_id: str, respuesta_tipo: str, r
             )
 
     # Tras la resolución: el respondedor pasa a atacar en el siguiente turno
-    combat["ultima_accion"] = {
+    entrada = {
         "tipo": respuesta_tipo,
         "texto": respuesta_texto,
-        "usuario_id": respondedor_id
+        "usuario_id": respondedor_id,
+        "resultado": resultado,
+        "timestamp": datetime.now().isoformat()
     }
+    combat["ultima_accion"] = entrada
+    combat["historial"].append(entrada)
     combat["fase"] = "ataque"
     combat["turno_actual"] = respondedor_id
     save_combats(combats)
