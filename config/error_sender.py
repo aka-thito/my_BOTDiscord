@@ -1,5 +1,6 @@
 import discord
 
+
 async def send(target, embed):
     # Envía un embed a un Context o a un Interaction
     if isinstance(target, discord.Interaction):
@@ -15,4 +16,4 @@ async def send(target, embed):
             except Exception:
                 pass
     else:
-        await target.send(embed = embed)
+        await target.send(embed=embed)

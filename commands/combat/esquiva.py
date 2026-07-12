@@ -1,17 +1,20 @@
 import discord
-from discord.ext import commands
 from discord import app_commands
+from discord.ext import commands
 
-from config.combat_manager import get_active_combat, resolve_response
 from config.embeds import error_embed, info_embed
+from config.logging_config import setup_logging
 from config.settings import COMBAT_LOG_CHANNEL_ID
+from services.combat_service import CombatService
+
+logger = setup_logging()
+combat_service = CombatService()
 
 
-def _build_resolucion_embed(combat_id: str, accion: str, respondedor_id: str, resultado: str, siguiente_id: str) -> discord.Embed:
-    embed = info_embed(
-        f"💨 ESQUIVA — {combat_id}",
-        f"<@{respondedor_id}>: \"{accion}\""
-    )
+def _build_resolucion_embed(
+    combat_id: str, accion: str, respondedor_id: str, resultado: str, siguiente_id: str
+) -> discord.Embed:
+    embed = info_embed(f"💨 ESQUIVA — {combat_id}", f'<@{respondedor_id}>: "{accion}"')
     embed.add_field(name="Resultado", value=resultado, inline=False)
     embed.add_field(name="Siguiente turno", value=f"<@{siguiente_id}> para atacar", inline=False)
     return embed
@@ -27,42 +30,48 @@ class Esquiva(commands.Cog):
         await interaction.response.defer()
 
         user_id = str(interaction.user.id)
-        combat_id, combat = get_active_combat(user_id)
+        combat_id, combat = combat_service.get_active_combat(user_id)
 
         if combat is None:
             await interaction.followup.send(
                 embed=error_embed("Sin combate", "No estás en ningún combate activo."),
-                ephemeral=True
+                ephemeral=True,
             )
             return
 
         if combat["turno_actual"] != user_id:
             await interaction.followup.send(
                 embed=error_embed("No es tu turno", "Espera a que tu oponente realice su acción."),
-                ephemeral=True
+                ephemeral=True,
             )
             return
 
         if combat["fase"] != "respuesta":
             await interaction.followup.send(
-                embed=error_embed("Fase incorrecta", "No hay un ataque pendiente al que responder."),
-                ephemeral=True
+                embed=error_embed(
+                    "Fase incorrecta", "No hay un ataque pendiente al que responder."
+                ),
+                ephemeral=True,
             )
             return
 
         try:
-            resultado, combat_actualizado = resolve_response(combat_id, user_id, "esquiva", accion)
+            resultado, combat_actualizado = combat_service.resolve_response(
+                combat_id, user_id, "esquiva", accion
+            )
         except KeyError:
             await interaction.followup.send(
-                embed=error_embed("Error", "No se encontraron las estadísticas de uno de los combatientes."),
-                ephemeral=True
+                embed=error_embed(
+                    "Error", "No se encontraron las estadísticas de uno de los combatientes."
+                ),
+                ephemeral=True,
             )
             return
         except Exception as e:
-            print(f"[ESQUIVA] Error al resolver: {e}")
+            logger.error("Error al resolver esquiva: %s", e)
             await interaction.followup.send(
                 embed=error_embed("Error inesperado", "Ocurrió un error al procesar la esquiva."),
-                ephemeral=True
+                ephemeral=True,
             )
             return
 
@@ -75,11 +84,9 @@ class Esquiva(commands.Cog):
                     )
                 )
         except Exception as e:
-            print(f"[ESQUIVA] Error al enviar log: {e}")
+            logger.error("Error al enviar log: %s", e)
 
-        await interaction.followup.send(
-            embed=info_embed("Esquiva registrada", resultado)
-        )
+        await interaction.followup.send(embed=info_embed("Esquiva registrada", resultado))
 
 
 async def setup(bot):

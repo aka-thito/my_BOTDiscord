@@ -1,5 +1,6 @@
 import discord
 
+
 # Funcion para obtener los intents del bot
 def get_intents():
 

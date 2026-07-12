@@ -1,6 +1,6 @@
-﻿import discord
-from discord.ext import commands
+import discord
 from discord import app_commands
+from discord.ext import commands
 
 from config.embeds import success_embed
 from config.error_handler import handle_error
@@ -12,40 +12,32 @@ class Moderation_Ban(commands.Cog):
         self.bot = bot
 
     # Descripcion de los parametros del comando
-    @app_commands.describe(
-        member = "El miembro a banear",
-        reason = "La razón del baneo"
-    )
-
+    @app_commands.describe(member="El miembro a banear", reason="La razón del baneo")
     # Descripcion: Comando para banear a un miembro del servidor (slash)
-    @app_commands.command(
-        name = "ban",
-        description = "Banea a un miembro del servidor"
-    )
-    @app_commands.checks.has_permissions(ban_members = True)
-    async def ban(self, 
-                  interaction: discord.Interaction, 
-                  member: discord.Member, 
-                  reason: str = None):
+    @app_commands.command(name="ban", description="Banea a un miembro del servidor")
+    @app_commands.checks.has_permissions(ban_members=True)
+    async def ban(
+        self, interaction: discord.Interaction, member: discord.Member, reason: str = None
+    ):
 
         # Si el usuario se menciona a si mismo
         if member == interaction.user:
             await handle_error(interaction, ErrorType.SELF_ACTION)
             return
-        
+
         # Si
         bot_member = interaction.guild.get_member(self.bot.user.id)
-        
+
         # Si el miembro a banear es el bot
         if member == interaction.guild.me:
             await handle_error(interaction, ErrorType.INVALID_TARGET)
             return
-        
+
         # Si el miembro tiene un rol superior o igual al del autor
         if member.top_role >= interaction.user.top_role:
             await handle_error(interaction, ErrorType.HIERARCHY)
             return
-    
+
         # Asignacion de razon por defecto si no se proporciona
         reason = reason or "No se proporcionó una razón."
 
@@ -55,10 +47,8 @@ class Moderation_Ban(commands.Cog):
             await interaction.response.defer()
             await member.ban(reason=reason)
             await interaction.followup.send(
-                embed = success_embed(
-                    "Miembro baneado",
-                    f"**{member.name}** fue baneado.\n"
-                    f"**Razón:** {reason}"
+                embed=success_embed(
+                    "Miembro baneado", f"**{member.name}** fue baneado.\n**Razón:** {reason}"
                 )
             )
 
@@ -80,10 +70,14 @@ class Moderation_Ban(commands.Cog):
 
         # Mapeo basico de errores a ErrorType
         from discord import app_commands as _ac
-        if isinstance(error, _ac.MissingPermissions) or isinstance(error, commands.MissingPermissions):
+
+        if isinstance(error, _ac.MissingPermissions) or isinstance(
+            error, commands.MissingPermissions
+        ):
             await handle_error(interaction, ErrorType.PERMISSIONS)
         else:
             await handle_error(interaction, ErrorType.UNKNOWN)
+
 
 async def setup(bot):
     # Agrega el Cog Moderation_Ban al bot
