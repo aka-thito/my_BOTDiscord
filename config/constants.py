@@ -3,21 +3,88 @@ from pathlib import Path
 CHARACTER_PATH = Path("data/characters.json")
 
 CLANES = [
-    "Uchiha",
-    "Senju",
-    "Hyuga",
-    "Akimichi",
-    "Yamanaka",
-    "Nara",
     "Aburame",
+    "Akimichi",
+    "Chinoike",
+    "Jūgo",
+    "Fūma (Amegakure)",
+    "Hagoromo",
+    "Hatake",
+    "Hoshigaki",
+    "Hyūga",
+    "Hōzuki",
+    "Iburi",
     "Inuzuka",
+    "Kaguya",
+    "Kamizuru",
+    "Kazekage",
+    "Kedōin",
+    "Kohaku",
+    "Kubisaki",
+    "Kurama",
+    "Lee",
+    "Nara",
+    "Onikuma",
+    "Sarutobi",
+    "Senju",
+    "Shiin",
+    "Shimura",
+    "Taketori",
+    "Tsuchigumo",
+    "Uchiha",
     "Uzumaki",
+    "Yamanaka",
+    "Yotsuki",
+    "Yuki",
+    "Ōtsutsuki",
+    "Hōki",
+    "Kagetsu",
+    "Wagarashi",
+    "Wasabi",
+    "Clima",
+    "Sin Clan"
 ]
 
-RAZAS = ["Humano", "Fabricado", "Humano Sintético", "Ser Celestial"]
-RAREZA_RAZA = [90, 5, 4, 1]
+RAZAS = {
+    "Humano": "Común",
+    "Fabricado": "Raro",
+    "Humano Sintético": "Épico",
+    "Ser Celestial": "Legendaria"
+}
 
-ELEMENTOS = ["Fuego", "Agua", "Tierra", "Aire", "Rayo"]
+RAREZA = {
+    90: "Común",
+    5: "Raro",
+    4: "Épico",
+    1: "Legendaria"
+}
+
+ELEMENTOS = [
+    "Acero",
+    "Agua",
+    "Barro",
+    "Cristal",
+    "Disolución",
+    "Ebullición",
+    "Explosión",
+    "Fuego",
+    "Fusión",
+    "Hielo",
+    "Imán",
+    "Madera",
+    "Oscuridad",
+    "Polvo",
+    "Quemar",
+    "Rayo",
+    "Tierra",
+    "Tifón",
+    "Tormenta",
+    "Velocidad",
+    "Viento",
+    "Yang",
+    "Yin",
+    "Yin-Yang"
+]
 
 ALDEAS = [
     "Aldea de la Hoja",
@@ -27,10 +94,18 @@ ALDEAS = [
     "Aldea del Rayo",
 ]
 
-RANGO_INICIAL = "Genin"
-RANGOS = ["Estudiante", "Genin", "Chunin", "Jonin", "Anbu", "Kage"]
+RANGO_INICIAL = "Civil"
 
-ESPECIALIZACION_INICIAL = "Taijutsu"
+RANGOS = [
+    "Civil",
+    "Estudiante",
+    "Genin",
+    "Chunin",
+    "Jonin",
+    "Anbu",
+    "Kage"
+]
+
 ESPECIALIZACIONES = [
     "Taijutsu",
     "Ninjutsu",
@@ -41,9 +116,11 @@ ESPECIALIZACIONES = [
 ]
 
 ESTADISTICAS_BASE = {
-    "fuerza": 10,
-    "velocidad": 10,
-    "resistencia": 10,
-    "inteligencia": 10,
+    "fuerza": 1,
+    "velocidad": 1,
+    "resistencia": 1,
+    "inteligencia": 1,
     "chakra": 100,
 }
+
+PUNTOS_BASE = 10
